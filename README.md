@@ -6,7 +6,7 @@
 - Kiria Elkess Daoud Botros – 8301  
 - Karen Sameh Sabry Nasr – 8366  
 
-A complete web-based Car Rental System built with **PHP** and **MySQL**, providing separate **Admin** and **Customer** interfaces to manage car rentals, reservations, and payments. The system includes user authentication, dashboards, search functionality, reservation, and payment processing.
+A complete web-based Car Rental System built with **HTML**, **PHP** and **MySQL**, providing separate **Admin** and **Customer** interfaces to manage car rentals, reservations, and payments. The system includes user authentication, dashboards, search functionality, reservation, and payment processing.
 
 ---
 ## Introduction
