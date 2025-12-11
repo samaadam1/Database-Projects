@@ -1,0 +1,101 @@
+CREATE DATABASE CarRentalSystem;
+
+USE CarRentalSystem;
+
+-- Office Table
+CREATE TABLE Office (
+    OfficeID INT AUTO_INCREMENT PRIMARY KEY,
+    Location VARCHAR(100) NOT NULL,
+    Phone VARCHAR(20)
+);
+
+-- Car Table
+CREATE TABLE Car (
+    CarID INT AUTO_INCREMENT PRIMARY KEY,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    PlateID VARCHAR(20) UNIQUE NOT NULL,
+    Status ENUM('Active', 'Out of Service', 'Rented') DEFAULT 'Active',
+    CostPerDay DECIMAL(10, 2) NOT NULL
+);
+
+-- Customer Table
+CREATE TABLE Customer (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL, 
+    Phone VARCHAR(15),
+    Address TEXT
+);
+
+-- Reservation Table
+CREATE TABLE Reservation (
+    ReservationID INT AUTO_INCREMENT PRIMARY KEY,
+    CarID INT,
+    CustomerID INT,
+    ReservationDate DATE NOT NULL,
+    StartDate DATE NOT NULL, -- Pickup date
+    EndDate DATE NOT NULL, -- Return date
+    OfficeID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (CarID) REFERENCES Car(CarID),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+-- Payment Table
+CREATE TABLE Payment (
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    ReservationID INT,
+    TotalCost DECIMAL(10, 2),
+    PaymentDate DATE NOT NULL,
+    PaymentMethod ENUM('Cash', 'Credit Card', 'Online') NOT NULL,
+    CardID VARCHAR(255) NOT NULL,
+    FOREIGN KEY (ReservationID) REFERENCES Reservation(ReservationID)
+);
+
+-- Admin Table
+CREATE TABLE Admin (
+    AdminID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL, -- Encrypted passwords are recommended
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    FullName VARCHAR(100) NOT NULL
+);
+
+-- Altering the 'Customer' table
+ALTER TABLE customer MODIFY phone VARCHAR(15);
+ALTER TABLE customer ADD UNIQUE (email);
+ALTER TABLE customer ADD UNIQUE (phone);
+
+-- Dropping the 'PaymentMethod' column from the 'Payment' table
+ALTER TABLE payment DROP COLUMN PaymentMethod;
+
+-- Dropping the 'Amount' column from the 'Reservation' table
+ALTER TABLE reservation DROP COLUMN amount;
+
+
+
+SET GLOBAL event_scheduler = ON;
+-- Event: update_car_status_to_active
+CREATE EVENT IF NOT EXISTS update_car_status_to_active
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+  UPDATE Car
+  SET Status = 'Active'
+  WHERE Status = 'Out of Service';
+
+-- Event: update_car_status_to_rented
+CREATE EVENT IF NOT EXISTS update_car_status_to_rented
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+  UPDATE Car
+  SET Status = 'Rented'
+  WHERE Status = 'Active' AND CarID IN (
+      SELECT CarID FROM Reservation
+      WHERE CURDATE() BETWEEN StartDate AND EndDate
+  );
+

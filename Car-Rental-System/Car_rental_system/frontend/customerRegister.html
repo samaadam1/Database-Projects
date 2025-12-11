@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Registration</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-image: url("CustomerCar.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top;
+        position: relative;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.5);
+        z-index: -1;
+        filter: blur(80px);
+      }
+      h1 {
+        text-align: center;
+        background: linear-gradient(to right, #4caf50, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        margin-top: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      form {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #000;
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #4caf50;
+        font-size: 1em;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        border-color: #4caf50;
+        outline: none;
+      }
+      button {
+        padding: 12px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        transition: transform 0.2s, background-color 0.3s;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #3a9e40;
+        transform: scale(1.05);
+      }
+      .message {
+        text-align: center;
+        font-size: 1em;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #842029;
+      }
+      .success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+      }
+      @media (max-width: 600px) {
+        form {
+          width: 90%;
+          margin: 20px auto;
+        }
+        h1 {
+          font-size: 2em;
+        }
+      }
+    </style>
+    <script>
+      function validateForm() {
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const phone = document.getElementById("phone").value;
+        const address = document.getElementById("address").value;
+
+        if (!firstName || !lastName || !email || !password || !confirmPassword || !phone || !address) {
+          displayMessage("All fields are required.", "error");
+          return false;
+        }
+
+        if (password !== confirmPassword) {
+          displayMessage("Passwords do not match.", "error");
+          return false;
+        }
+
+        if (isNaN(phone)) {
+          displayMessage("Phone number must be numeric.", "error");
+          return false;
+        }
+
+        if (phone.length > 15) {
+          displayMessage("Phone number must not exceed 15 characters.", "error");
+          return false;
+        }
+
+        return true;
+      }
+
+      function handleFormSubmit(event) {
+        event.preventDefault();
+
+        if (!validateForm()) return;
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: form.method,
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message) {
+              if (data.message === "Registration successful.") {
+                //displayMessage(data.message, "success");
+                //form.reset();
+                window.location.href = data.redirect;
+              } else {
+                displayMessage(data.message, "error");
+              }
+            }
+          })
+          .catch((error) => {
+            displayMessage("An error occurred. Please try again.", "error");
+          });
+      }
+
+      function displayMessage(message, type) {
+        const messageDiv = document.getElementById("message");
+        messageDiv.textContent = message;
+        messageDiv.className = `message ${type}`;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Customer Registration</h1>
+    <div id="message"></div>
+    <form
+      action="../api/register.php"
+      method="post"
+      onsubmit="handleFormSubmit(event);"
+    >
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" />
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" />
+
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" />
+
+      <label for="phone">Phone Number:</label>
+      <input type="text" id="phone" name="phone" placeholder="Enter your phone number" />
+
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" placeholder="Enter your address" />
+
+      <button type="submit">Register</button>
+    </form>
+  </body>
+</html>

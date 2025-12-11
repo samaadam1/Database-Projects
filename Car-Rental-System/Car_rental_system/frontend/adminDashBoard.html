@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        background-image: url("Admin.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top;
+        position: relative;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        }
+
+        body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.5);
+        z-index: -1;
+        filter: blur(80px);
+        }
+
+        h1 {
+            text-align: center;
+        background: linear-gradient(to right, #4caf50, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        margin-top: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+        }
+
+        form {
+            max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #000;
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+        }
+
+        label ,h2{
+            display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #4caf50;
+        font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        transition: transform 0.2s, background-color 0.3s;
+        width: 100%;
+        }
+
+        button:hover {
+            background-color: #3a9e40;
+            transform: scale(1.05);
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        p{
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+        form {
+          width: 90%;
+          margin: 20px auto;
+        }
+        h1 {
+          font-size: 2em;
+        }
+      }
+
+    </style>
+</head>
+
+<body>
+    <h1>Admin Dashboard</h1>
+    <form id="repForm" method="get">
+
+        <h2>Generate Reports</h2><br>
+
+        <label for="repType">Select Report Type:</label>
+        <select id="repType" name="repType">
+            <option value="">Select Report</option>
+            <option value="reservations">All reservations within a period (car information + customer information)</option>
+            <option value="carRes">All reservations within a period (car information)</option>
+            <option value="carStatus">Car status on specific day</option>
+            <option value="customerRes">Reservations of specific customer</option>
+            <option value="dailyPayments">Daily payments within period</option>
+        </select>
+
+        <div id="repField"></div>
+
+        <button type="submit"  >Generate Report</button>
+    </form>
+    <div id="repResults" style="overflow-x:auto;"></div>
+
+    <form  method="get" style="margin-top: 30px;" id="statusUpdate" >
+        <h2>Manage Cars</h2><br>
+        
+        <label for="status">Update Car Status:</label>
+        <select id="status" name="status">
+            <option value="Active">Active</option>
+            <option value="Out of Service">Out of Service</option>
+            <option value="Rented">Rented</option>
+        </select>
+
+        <label for="car_id">Car ID:</label>
+        <input type="text" id="car_id" name="car_id" required>
+
+        <button type="submit">Update Status</button>
+    </form>
+    <div id="resultStatus"></div>
+
+    <script>
+
+document.getElementById('repType').addEventListener('change', function () {
+    const repType = this.value;
+    const repField = document.getElementById('repField');
+    
+    repField.innerHTML = ''; 
+
+    if (repType) {
+        let fields = '';
+        switch (repType) {
+            case 'reservations':
+                fields = `
+                    <label for ="start_date" >Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                `;
+                break;
+            case 'carRes':
+                fields = `
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                `;
+                break;
+            case 'carStatus':
+                fields = `
+                    <label for="day">Date:</label>
+                    <input type="date" id="day" name="day" required>
+                `;
+                break;
+            case 'customerRes':
+                fields = `
+                    <label for="ID">Customer ID:</label>
+                    <input type="text" id="ID" name="ID" required>
+                `;
+                break;
+            case 'dailyPayments':
+                fields = `
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                `;
+                break;
+        }
+        repField.innerHTML = fields;
+    }
+});
+
+document.getElementById('repForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); 
+
+    const repType = document.getElementById('repType').value;
+    const repResults = document.getElementById('repResults');
+
+    const start_date = document.getElementById('start_date')?.value;
+    const end_date = document.getElementById('end_date')?.value;
+    const day = document.getElementById('day')?.value;
+    const ID = document.getElementById('ID')?.value;
+
+    if (!repType) {
+        alert('Please select a report type.');
+        return;
+    }
+
+    let sqlLink = '';
+    const sqlParameter = [];
+
+    switch (repType) {
+        case 'reservations':
+            sqlLink = '../api/reports/reportWithinPeriod.php';
+            sqlParameter.push(`start_date=${start_date}`, `end_date=${end_date}`);
+            break;
+
+        case 'carRes':
+            sqlLink = '../api/reports/reportWithinPeriodCar.php';
+            sqlParameter.push(`start_date=${start_date}`, `end_date=${end_date}`);
+            break;
+
+        case 'carStatus':
+            sqlLink = '../api/reports/reportStatus.php';
+            sqlParameter.push(`day=${day}`);
+            break;
+
+        case 'customerRes':
+            sqlLink = '../api/reports/reportCustomer.php';
+            sqlParameter.push(`ID=${ID}`);
+            break;
+
+        case 'dailyPayments':
+            sqlLink = '../api/reports/reportPayments.php';
+            sqlParameter.push(`start_date=${start_date}`, `end_date=${end_date}`);
+            break;
+
+        default:
+            repResults.innerHTML = 'Invalid report type selected.';
+            return;
+    }
+
+    try {
+        const result = await fetch(`${sqlLink}?${sqlParameter.join('&')}`);
+        const data = await result.json();
+
+        if (!data.data || data.data.length === 0) {
+            repResults.innerHTML = 'No data found ';
+            return;
+        }
+
+        let table = '<table border="1" style="width: 100%;">';
+        table += '<caption>Report Results</caption>';
+
+        //  table headers
+        table += '<thead><tr>';
+        for (let category in data.data[0]) {
+            table += `<th>${category}</th>`;
+        }
+        table += '</tr></thead>';
+
+        // table rs
+        table += '<tbody>';
+        for (let r of data.data) {
+            table += '<tr>';
+            for (let word in r) {
+                table += `<td>${r[word]}</td>`;
+            }
+            table += '</tr>';
+        }
+        table += '</tbody></table>';
+        repResults.innerHTML = table;
+
+    } catch (error) {
+        repResults.innerHTML = 'Error occurred while fetching data';
+    }
+});
+
+document.getElementById('repForm').addEventListener('click', function (e) {
+    const t = e.target;
+
+    if (t.type === 'date') {
+        if (t.showPicker) {
+            t.showPicker(); // Opens the calendar
+        } else {
+            t.focus(); 
+        }
+    }
+});
+
+document.getElementById('statusUpdate').addEventListener('submit', async function (event) {
+    event.preventDefault(); 
+
+    const status = document.getElementById('status')?.value;
+    const car_id = document.getElementById('car_id')?.value;
+    
+    try{
+        const sqlParameter = [];
+
+    sqlLink = '../api/manage_cars.php';
+    sqlParameter.push(`status=${status}`, `car_id=${car_id}`);
+
+    const result = await fetch(`${sqlLink}?${sqlParameter.join('&')}`);
+    
+
+    const data = await result.json();
+    
+    const resultStatus = document.getElementById("resultStatus");
+    resultStatus.innerHTML = `<p style="color: green;">Success: ${data.message}</p>`;
+    } catch (error) {
+      document.getElementById("resultStatus").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+    }
+});
+
+    </script>
+</body>
+</html>

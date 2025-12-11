@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("d1.jpeg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
+            position: relative;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(to right, #4caf50, #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-top: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        input[type="date"],
+        select {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        function fetchAvailableCarsAndOffices() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (startDate && endDate) {
+                fetch(`fetch_cars.php?startDate=${startDate}&endDate=${endDate}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('car').innerHTML = '<option value="" selected>-- Select Car --</option>' + data;
+                    });
+
+                fetch(`fetch_offices.php?startDate=${startDate}&endDate=${endDate}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('office').innerHTML = '<option value="" selected>-- Select Office --</option>' + data;
+                    });
+            }
+        }
+
+        function validateDates() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+
+            if (endDate <= startDate) {
+                alert("End Date must be after Start Date.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Reserve a Car</h1>
+    <form action="reserve.php" method="POST" onsubmit="return validateDates()">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required onchange="fetchAvailableCarsAndOffices()">
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required onchange="fetchAvailableCarsAndOffices()">
+
+        <label for="car">Select a Car:</label>
+        <select id="car" name="carID" required>
+            <option value="" selected>-- Select Car --</option>
+        </select>
+
+        <label for="office">Select an Office:</label>
+        <select id="office" name="officeID" required>
+            <option value="" selected>-- Select Office --</option>
+        </select>
+
+        <input type="submit" value="Reserve">
+    </form>
+</body>
+</html>

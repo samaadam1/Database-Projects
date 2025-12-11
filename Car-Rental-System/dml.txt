@@ -1,0 +1,87 @@
+USE CarRentalSystem;
+
+-- Inserting data into the 'Office' table
+INSERT INTO Office (Location, Phone) VALUES
+('New York', '555-1234'),
+('Los Angeles', '555-5678'),
+('Chicago', '555-8765'),
+('Miami', '555-4321'),
+('San Francisco', '555-8766'),
+('Dallas', '555-2468'),
+('Boston', '555-1357'),
+('Houston', '555-7531'),
+('Seattle', '555-9512'),
+('Denver', '555-4678');
+
+-- Inserting data into the 'Car' table
+INSERT INTO Car (Model, Year, PlateID, Status, CostPerDay) VALUES
+('Toyota Camry', 2020, 'ABC123', 'Active', 50.00),
+('Honda Accord', 2021, 'XYZ456', 'Rented', 55.00),
+('Ford Mustang', 2022, 'LMN789', 'Out of Service', 80.00),
+('Chevrolet Malibu', 2021, 'DEF987', 'Active', 60.00),
+('BMW 3 Series', 2020, 'GHI654', 'Rented', 75.00),
+('Audi A4', 2019, 'JKL321', 'Active', 85.00),
+('Mercedes-Benz C-Class', 2022, 'MNO234', 'Out of Service', 95.00),
+('Tesla Model 3', 2023, 'PQR567', 'Active', 120.00),
+('Nissan Altima', 2022, 'STU890', 'Rented', 70.00),
+('Hyundai Sonata', 2021, 'VWX345', 'Active', 65.00),
+('Kia Optima', 2020, 'YZA678', 'Active', 55.00),
+('Volkswagen Passat', 2019, 'BCD234', 'Out of Service', 60.00),
+('Subaru Outback', 2023, 'EFG567', 'Rented', 80.00),
+('Mazda CX-5', 2021, 'HIJ890', 'Active', 70.00);
+
+-- Inserting data into the 'Customer' table
+INSERT INTO Customer (FirstName, LastName, Email, Password, Phone, Address) VALUES
+('John', 'Doe', 'johndoe@email.com', 'password123', '555-1111', '123 Main St, New York, NY'),
+('Jane', 'Smith', 'janesmith@email.com', 'password456', '555-2222', '456 Oak St, Los Angeles, CA'),
+('Michael', 'Johnson', 'mikejohnson@email.com', 'password789', '555-3333', '789 Pine St, Chicago, IL'),
+('Sarah', 'Williams', 'sarahw@email.com', 'password321', '555-4444', '101 Maple St, Miami, FL'),
+('David', 'Brown', 'davidb@email.com', 'password654', '555-5555', '202 Birch St, San Francisco, CA'),
+('Emily', 'Davis', 'emilyd@email.com', 'password987', '555-6666', '303 Cedar St, Dallas, TX'),
+('Joshua', 'Miller', 'joshuam@email.com', 'password147', '555-7777', '404 Elm St, Boston, MA'),
+('Samantha', 'Garcia', 'samanthag@email.com', 'password258', '555-8888', '505 Pine St, Houston, TX'),
+('Christopher', 'Martinez', 'chrism@email.com', 'password369', '555-9999', '606 Oak St, Seattle, WA'),
+('Olivia', 'Hernandez', 'oliviah@email.com', 'password753', '555-0000', '707 Maple St, Denver, CO'),
+('Daniel', 'Lopez', 'daniel@email.com', 'password741', '555-1234', '808 Birch St, Miami, FL'),
+('Sophia', 'Gonzalez', 'sophiag@email.com', 'password852', '555-4321', '909 Cedar St, New York, NY'),
+('Benjamin', 'Clark', 'benjamin@email.com', 'password963', '555-5678', '1010 Elm St, Los Angeles, CA'),
+('Ava', 'Rodriguez', 'ava@email.com', 'password654', '555-6789', '1111 Oak St, Chicago, IL');
+
+-- Inserting data into the 'Reservation' table (Note: Amount column removed)
+INSERT INTO Reservation (CarID, CustomerID, ReservationDate, StartDate, EndDate, OfficeID) VALUES
+(1, 1, '2024-12-01', '2024-12-10', '2024-12-15', 1),
+(2, 2, '2024-12-05', '2024-12-12', '2024-12-20', 2),
+(3, 3, '2024-12-10', '2024-12-15', '2024-12-18', 3),
+(4, 4, '2024-12-12', '2024-12-20', '2024-12-25', 4),
+(5, 5, '2024-12-15', '2024-12-18', '2024-12-22', 5),
+(6, 6, '2024-12-20', '2024-12-22', '2024-12-28', 6),
+(7, 7, '2024-12-22', '2024-12-26', '2024-12-30', 7),
+(8, 8, '2024-12-25', '2024-12-28', '2025-01-02', 8),
+(9, 9, '2024-12-27', '2025-01-02', '2025-01-05', 9),
+(10, 10, '2024-12-30', '2025-01-05', '2025-01-10', 10),
+(11, 1, '2024-12-10', '2024-12-15', '2024-12-20', 2),
+(12, 2, '2024-12-15', '2024-12-18', '2024-12-23', 3),
+(13, 3, '2024-12-18', '2024-12-22', '2024-12-25', 4),
+(14, 4, '2024-12-21', '2024-12-24', '2024-12-29', 5);
+
+-- Inserting data into the 'Payment' table
+INSERT INTO Payment (ReservationID, TotalCost, PaymentDate, CardID) VALUES
+(1, 500.00, '2024-12-01', '1234-5678-9876-5432'),
+(2, 600.00, '2024-12-05', '9876-5432-1234-5678'),
+(3, 240.00, '2024-12-10', '1111-2222-3333-4444'),
+(4, 300.00, '2024-12-12', '5555-6666-7777-8888'),
+(5, 350.00, '2024-12-15', '8888-7777-6666-5555'),
+(6, 420.00, '2024-12-20', '1111-4444-3333-2222'),
+(7, 560.00, '2024-12-22', '1234-5678-9876-5432'),
+(8, 600.00, '2024-12-25', '8765-4321-5678-1234'),
+(9, 210.00, '2024-12-27', '2345-6789-1234-5678'),
+(10, 300.00, '2024-12-30', '5555-4444-3333-2222'),
+(11, 400.00, '2024-12-10', '9999-8888-7777-6666'),
+(12, 500.00, '2024-12-15', '1111-2222-3333-4444'),
+(13, 350.00, '2024-12-18', '5555-4444-3333-2222'),
+(14, 600.00, '2024-12-21', '1234-5678-9876-5432');
+
+-- Inserting data into the 'Admin' table
+INSERT INTO Admin (Username, Password, Email, FullName) VALUES
+('admin1', 'adminpassword1', 'admin1@email.com', 'Admin One'),
+('admin2', 'adminpassword2', 'admin2@email.com', 'Admin Two');

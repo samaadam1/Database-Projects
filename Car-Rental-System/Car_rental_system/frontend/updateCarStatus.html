@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("M.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
+            position: relative;
+            color: #333;
+            margin: 0;
+        padding: 0;
+        }
+
+        body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: -1;
+        filter: blur(80px);
+      }
+
+      h1 {
+        text-align: center;
+        background: linear-gradient(to right, #4caf50, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        margin-top: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+        form {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label ,h2{
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #218838;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        transition: transform 0.2s, background-color 0.3s;
+        width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        p{
+            text-align: center;
+        }
+
+        #resultStatus {
+  background-color: white;
+}
+
+    </style>
+</head>
+<body>
+    <form  method="get" style="margin-top: 30px;" id="statusUpdate" >
+        <h2>Manage Cars</h2><br>
+        
+        <label for="status">Update Car Status:</label>
+        <select id="status" name="status">
+            <option value="Active">Active</option>
+            <option value="Out of Service">Out of Service</option>
+            <option value="Rented">Rented</option>
+        </select>
+
+        <label for="car_id">Car ID:</label>
+        <input type="text" id="car_id" name="car_id" required>
+
+        <button type="submit">Update Status</button>
+    </form>
+    <div id="resultStatus" ></div>
+
+<script>
+    document.getElementById('statusUpdate').addEventListener('submit', async function (event) {
+        event.preventDefault(); 
+    
+        const status = document.getElementById('status')?.value;
+        const car_id = document.getElementById('car_id')?.value;
+        
+        try{
+            const sqlParameter = [];
+    
+        sqlLink = '../api/manage_cars.php';
+        sqlParameter.push(`status=${status}`, `car_id=${car_id}`);
+    
+        const result = await fetch(`${sqlLink}?${sqlParameter.join('&')}`);
+        
+    
+        const data = await result.json();
+        
+        const resultStatus = document.getElementById("resultStatus");
+        if (data.message.includes("does not exist")) {
+            resultStatus.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`;
+        }else {
+        resultStatus.innerHTML = `<p style="color: green;">Success: ${data.message}</p>`;
+        }
+        } catch (error) {
+          document.getElementById("resultStatus").innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        }
+    });
+    
+        </script>
+
+</body>
+</html>

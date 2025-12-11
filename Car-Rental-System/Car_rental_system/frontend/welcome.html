@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Car Rental System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            background: url('cars.jpg') no-repeat center top fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text contrast */
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 4rem; /* Larger title */
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7); /* Slightly stronger shadow */
+            color: #ff5733; /* Warm, modern color */
+            margin: 0;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .options a {
+            padding: 15px 30px;
+            color: #fff;
+            background-color: #444;
+            border-radius: 12px; /* Softer corners */
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 280px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow for button */
+        }
+
+        .options a:nth-child(1) {
+            background-color: #007bff; /* Blue */
+        }
+
+        .options a:nth-child(2) {
+            background-color: #28a745; /* Green */
+        }
+
+        .options a:nth-child(3) {
+            background-color: #dc3545; /* Red */
+        }
+
+        .options a:hover {
+            transform: scale(1.1); /* More noticeable zoom on hover */
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 10px;
+            font-size: 1rem;
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="header">
+        <h1>Experience the Best in Car Rental Services</h1>
+    </div>
+    <div class="options-container">
+        <div class="options">
+            <a href="customerRegister.html">Register</a>
+            <a href="customerLogin.html">Login</a>
+            <a href="adminLogin.html">Admin Dashboard</a>
+        </div>
+    </div>
+    <footer>
+        &copy; 2024 Car Rental System. All rights reserved.
+    </footer>
+</body>
+
+</html>

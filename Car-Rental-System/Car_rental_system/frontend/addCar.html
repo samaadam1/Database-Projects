@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Gnerate Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        background-image: url("AC.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top;
+        position: relative;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        }
+
+        body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.5);
+        z-index: -1;
+        filter: blur(80px);
+        }
+
+        h1 {
+            text-align: center;
+        background: linear-gradient(to right, #4caf50, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        margin-top: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+        }
+
+        form {
+            max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #000;
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0.9;
+        }
+
+        label ,h2{
+            display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #4caf50;
+        font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        select {
+            width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        transition: transform 0.2s, background-color 0.3s;
+        width: 100%;
+        }
+
+        button:hover {
+            background-color: #3a9e40;
+            transform: scale(1.05);
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        p{
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+        form {
+          width: 90%;
+          margin: 20px auto;
+        }
+        h1 {
+          font-size: 2em;
+        }
+      }
+
+    </style>
+</head>
+<body>
+<form  method="get" style="margin-top: 30px;" id="addCar">
+    <h2>Add Car</h2><br>
+    <label for="model">Model:</label>
+    <input type="text" id="model" name="model" required>
+
+    <label for="year">Year:</label>
+    <input type="number" id="year" name="year"  min="1900" max="2100" step="1" required>
+
+    <label for="plateID">PlateID:</label>
+    <input type="text" id="plateID" name="plateID" required>
+
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" required>
+
+
+    <label for="cost">Cost Per Day:</label>
+    <input type="text" id="cost" name="cost" required>
+    <button type="submit">Submit</button>
+</form>
+
+
+<div id="resultAdd"></div>
+
+<script>
+    document.getElementById('addCar').addEventListener('submit', async function (event) {
+        event.preventDefault(); 
+    
+        const model = document.getElementById('model')?.value;
+        const year = document.getElementById('year')?.value;
+        const plateID = document.getElementById('plateID')?.value;
+        const status = document.getElementById('status')?.value;
+        const costPerDay = document.getElementById('cost')?.value;
+        
+        try{
+            const sqlParameter = [];
+    
+        sqlLink = '../api/addNewCar.php';
+        sqlParameter.push(`model=${model}`, `year=${year}`, `plateID=${plateID}`,`status=${status}` , `costPerDay=${costPerDay}`);
+    
+        const result = await fetch(`${sqlLink}?${sqlParameter.join('&')}`);
+        
+    
+        const data = await result.json();
+        
+        const resultAdd = document.getElementById("resultAdd");
+        if (data.message.includes("Error")) {
+            resultAdd.innerHTML = `<p style="color: red;"> ${data.message}</p>`;
+        }else {
+            resultAdd.innerHTML = `<p style="color: green;">Success: ${data.message}</p>`;
+        }
+        } catch (error) {
+          document.getElementById("resultAdd").innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+    });
+    
+    </script>
+
+</body>
+</html>

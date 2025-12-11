@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("BS.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
+            position: relative;
+            color: #333;
+            margin: 0;
+        padding: 0;
+        }
+
+        body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: -1;
+        filter: blur(80px);
+      }
+      h1 {
+        text-align: center;
+        background: linear-gradient(to right, #4caf50, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        margin-top: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        input[type="text"],
+        select {
+            width: 95%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .no-results {
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Search your Favorite Car</h1>
+    <form id="searchForm">
+        <label for="model">Car Model:</label>
+        <input type="text" id="model" name="model">
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="">-- Select Status --</option>
+            <option value="Active">Active</option>
+            <option value="Out of Service">Out of Service</option>
+            <option value="Rented">Rented</option>
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <table id="resultsTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Car ID</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Plate ID</th>
+                <th>Status</th>
+                <th>Office ID</th>
+                <th>Cost Per Day</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+            <!-- Results will be dynamically injected here -->
+        </tbody>
+    </table>
+
+    <div id="noResultsMessage" class="no-results" style="display: none;">No cars found matching the criteria.</div>
+
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const resultsTable = document.getElementById('resultsTable');
+        const resultsBody = document.getElementById('resultsBody');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+
+        // Handle form submission
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(searchForm);
+            const query = new URLSearchParams(formData).toString();
+
+            try {
+                // Fetch search results
+                const response = await fetch(`../api/search.php?${query}`);
+                const data = await response.json();
+
+                // Clear previous results
+                resultsBody.innerHTML = '';
+                resultsTable.style.display = 'none';
+                noResultsMessage.style.display = 'none';
+
+                if (Array.isArray(data) && data.length > 0) {
+                    // Populate the table with results
+                    data.forEach(car => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${car.CarID}</td>
+                            <td>${car.Model}</td>
+                            <td>${car.Year}</td>
+                            <td>${car.PlateID}</td>
+                            <td>${car.Status}</td>
+                            <td>${car.OfficeID}</td>
+                            <td>$${car.CostPerDay}</td>
+                        `;
+                        resultsBody.appendChild(row);
+                    });
+                    resultsTable.style.display = 'table';
+                } else {
+                    // Show no results message
+                    noResultsMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>

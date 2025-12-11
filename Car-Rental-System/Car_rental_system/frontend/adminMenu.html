@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome to Car Rental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("AM.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align to the top */
+            align-items: flex-start; /* Align to the left */
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.3); /* Lighter background for a softer effect */
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(to right, #4caf50, #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-top: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            -webkit-text-stroke: 2px black; /* Black outline with 2px width */
+            color: transparent; /* Make the text transparent so the outline is visible */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            margin-top: 20px;
+            margin-left: 20px; /* Move buttons to the left */
+        }
+
+        .options a {
+            padding: 15px 20px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.5em;
+            text-align: center;
+            width: 250px;
+            display: block;
+            margin: 5px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Assign unique colors with softer tones for buttons */
+        .options a:nth-child(1) {
+            background-color: #87CEEB; /* Sky Blue */
+        }
+
+        .options a:nth-child(2) {
+            background-color: #8A2BE2; /* Blue Violet */
+        }
+
+        .options a:nth-child(3) {
+            background-color: #40E0D0; /* Turquoise */
+        }
+
+        .options a:nth-child(4) {
+            background-color: #FF1493; /* Deep Pink */
+        }
+
+        .options a:nth-child(5) {
+            background-color: #FFA500; /* Orange */
+        }
+
+        .options a:nth-child(6) {
+            background-color: #2E8B57; /* Sea Green */
+        }
+
+        /* Hover effect */
+        .options a:hover {
+            background-color: #555; /* Darker shade on hover */
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Experience the Best in Car Rental Services</h1>
+    <div class="options-container">
+        <div class="options">
+            <a href="advancedSearch.html">Search Car information</a>
+            <a href="reports.html">Generate Reports</a>
+            <a href="updateCarStatus.html">Update car status</a>
+            <a href="addCar.html">Add new car</a>
+        </div>
+    </div>
+</body>
+
+</html>
